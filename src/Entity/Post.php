@@ -43,14 +43,17 @@ class Post
      */
     #[
         Groups(['read:Post', 'read:Posts', 'write:Post']),
-        Assert\Length(min: 3, max: 30, minMessage: "Le titre doit avoir au moins {{ limit }} caractères", maxMessage: "Le titre doit maximum {{ limit }} caractères")
+        Assert\Length(min: 3)
     ]
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['read:Post', 'read:Posts', 'write:Post'])]
+    #[
+        Groups(['read:Post', 'read:Posts', 'write:Post']),
+        Assert\Length(min: 3)
+    ]
     private $slug;
 
     /**
@@ -72,10 +75,13 @@ class Post
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts", cascade="persist")
      * @ORM\JoinColumn(nullable=true)
      */
-    #[Groups(['read:Post', 'write:Post'])]
+    #[
+        Groups(['read:Post', 'write:Post']),
+        Assert\Valid
+    ]
     private $category;
 
     public function getId(): ?int
