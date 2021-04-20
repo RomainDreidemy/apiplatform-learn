@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\PostCountController;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,7 +18,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     collectionOperations: [
         'get' => ['normalization_context' => ['groups' => 'read:Posts']],
-        'post' => ['denormalization_context' => ['groups' => 'write:Post'], 'normalization_context' => ['groups' => 'write:Post']]
+        'post' => ['denormalization_context' => ['groups' => 'write:Post'], 'normalization_context' => ['groups' => 'write:Post']],
+        'count' => [
+            'method' => 'GET',
+            'path' => '/posts/count',
+            'controller' => PostCountController::class,
+            'openapi_context' => [
+                'summary' => 'Compte le nombre d\'article.',
+                'parameters' => [],
+                'responses' => [
+                    '200' => [
+                        'description' => 'Nombre de résultat',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'integer',
+                                    'example' => 3
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
     itemOperations: [
         'get' => ['normalization_context' => ['groups' => ['read:Post']]],
