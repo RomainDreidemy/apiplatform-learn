@@ -6,12 +6,19 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[
     ApiResource(
-        collectionOperations: ['get' => ['normalization_context' => ['groups' => ['read:Dependenies']]]],
-        itemOperations: ['get' => ['normalization_context' => ['groups' => ['read:Dependency']]]],
+        collectionOperations: [
+            'get' => ['normalization_context' => ['groups' => ['read:Dependenies']]],
+            'post'
+        ],
+        itemOperations: [
+            'get' => ['normalization_context' => ['groups' => ['read:Dependency']]],
+            'delete'
+        ],
         paginationEnabled: false
     )
 ]
@@ -36,12 +43,11 @@ class Dependency
     private string $version;
 
     public function __construct(
-        string $uuid,
         string $name,
         string $version
     )
     {
-        $this->uuid = $uuid;
+        $this->uuid     = Uuid::uuid5(Uuid::NAMESPACE_URL, $name)->toString();
         $this->name     = $name;
         $this->version  = $version;
     }
