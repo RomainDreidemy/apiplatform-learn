@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get' => ['normalization_context' => ['groups' => 'read:Posts']],
         'post' => ['denormalization_context' => ['groups' => 'write:Post'], 'normalization_context' => ['groups' => 'write:Post']],
         'count' => [
+            'security' => 'is_granted("ROLE_USER")',
             'method' => 'GET',
             'path' => '/posts/count',
             'controller' => PostCountController::class,
@@ -44,7 +45,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         ]
     ],
     itemOperations: [
-        'get' => ['normalization_context' => ['groups' => ['read:Post']]],
+        'get' => [
+            'normalization_context' => ['groups' => ['read:Post']],
+            'security' => "is_granted(['ROLE_USER'])" ,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []], '']
+            ]
+        ],
         'put' => ['denormalization_context' => ['groups' => 'write:Post'], 'normalization_context' => ['groups' => 'write:Post']],
         'delete',
         'publish' => [
